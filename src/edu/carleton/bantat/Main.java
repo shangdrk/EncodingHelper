@@ -15,5 +15,7 @@ public class Main {
         System.out.println(" b       b");
         System.out.println();
         System.out.println("Still not entertained? Alright, I give up");
+        String s = "5";
+        System.out.println((s.charAt(0) >= 'A' && s.charAt(0) <= 'F') || (s.charAt(0) >= '0' && s.charAt(0) <= '9'));
     }
 }

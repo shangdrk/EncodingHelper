@@ -5,6 +5,11 @@ import java.io.FileNotFoundException;
 import java.util.Scanner;
 
 /**
+ * @author Tore Banta
+ * @author Derek Shang
+ */
+
+/**
  * The main model class for the EncodingHelper project in
  * CS 257, Spring 2015, Carleton College. Each object of this class
  * represents a single Unicode character. The class's methods
@@ -14,30 +19,44 @@ public class EncodingHelperChar {
     private int codePoint;
 
     public EncodingHelperChar(int codePoint) {
+        if (codePoint > 0x1fffff || codePoint < 0) {
+            throw new IllegalArgumentException("code point out of range");
+        }
         this.codePoint = codePoint;
     }
     
     public EncodingHelperChar(byte[] utf8Bytes) {
-        byte infoPuller_1 = 0b00111111;
-        byte infoPuller_2 = 0b00011111;
-        byte infoPuller_3 = 0b00001111;
-        byte infoPuller_4 = 0b00000111;
+        if (utf8Bytes.length > 4) {
+            throw new IllegalArgumentException("Too many bytes in this array");
+        }
+        int tempCodePoint = 0;
+
+        final byte infoPuller_1 = 0b00111111;
+        final byte infoPuller_2 = 0b00011111;
+        final byte infoPuller_3 = 0b00001111;
+        final byte infoPuller_4 = 0b00000111;
 
         if (utf8Bytes.length == 1) {
-            codePoint = Byte.toUnsignedInt(utf8Bytes[0]);
+            tempCodePoint = Byte.toUnsignedInt(utf8Bytes[0]);
         } else if (utf8Bytes.length == 2) {
-            codePoint  = (utf8Bytes[0] & infoPuller_1) +
-                    (utf8Bytes[1] & infoPuller_2)* (int)Math.pow(2, 6);
+            tempCodePoint  = ((byte)(utf8Bytes[0] & infoPuller_2)<<6) |
+                    (byte)(utf8Bytes[1] & infoPuller_1);
         } else if (utf8Bytes.length == 3) {
-            codePoint = (utf8Bytes[0] & infoPuller_1) +
-                    (utf8Bytes[1] & infoPuller_1)* (int)Math.pow(2, 6) +
-                    (utf8Bytes[2] & infoPuller_3)* (int)Math.pow(2, 12);
+            tempCodePoint = ((byte)(utf8Bytes[0] & infoPuller_3)<<12)|
+                    ((byte)(utf8Bytes[1] & infoPuller_1)<<6)|
+                    (byte)(utf8Bytes[2] & infoPuller_1);
         } else {
-            codePoint = (utf8Bytes[0] & infoPuller_1) +
-                    (utf8Bytes[1] & infoPuller_1)* (int)Math.pow(2, 6) +
-                    (utf8Bytes[2] & infoPuller_1)* (int)Math.pow(2, 12) +
-                    (utf8Bytes[3] & infoPuller_4)* (int)Math.pow(2, 18);
+            tempCodePoint = ((byte)(utf8Bytes[0] & infoPuller_4)<<18) |
+                    ((byte)(utf8Bytes[1] & infoPuller_1)<<12) |
+                    ((byte)(utf8Bytes[2] & infoPuller_1)<<6) |
+                    (byte)(utf8Bytes[3] & infoPuller_1);
         }
+
+        if (tempCodePoint > 0x1fffff) {
+            throw new IllegalArgumentException("Code point specified by the " +
+                    "array is undefined");
+        }
+        codePoint = tempCodePoint;
 
     }
     
@@ -50,6 +69,9 @@ public class EncodingHelperChar {
     }
     
     public void setCodePoint(int codePoint) {
+        if (codePoint < 0 || codePoint > 0x1fffff) {
+            throw new IllegalArgumentException("Invalid code point");
+        }
         this.codePoint = codePoint;
     }
     
@@ -63,20 +85,37 @@ public class EncodingHelperChar {
      * @return the UTF-8 byte array for this character
      */
     public byte[] toUtf8Bytes() {
-        //byte[] Utf8Bytes;
-        //if (codePoint <= 0x0024) {
-        //    Utf8Bytes = new byte[1];
-        //} else if (codePoint > 0x0024 && codePoint <= 0x00a2) {
-        //    Utf8Bytes = new byte[2];
-        //} else if (codePoint > 0x00a2 && codePoint <= 0x20ac) {
-        //    Utf8Bytes = new byte[3];
-        //} else {
-        //    Utf8Bytes = new byte[4];
-        //}
+        final byte infoPuller_1 = 0b00111111;
+        final byte infoPuller_2 = (byte) 0b11000000;
+        final byte infoPuller_3 = (byte) 0b10000000;
+        final byte infoPuller_4 = (byte) 0b11100000;
+        final byte infoPuller_5 = (byte) 0b11110000;
 
-        //byte[] codePointBytes new byte[]
+        byte[] Utf8Bytes;
 
-        return null;
+        if (codePoint <= 0x0024) {
+            Utf8Bytes = new byte[]{(byte)codePoint};
+        } else if (codePoint > 0x0024 && codePoint <= 0x00a2) {
+            Utf8Bytes = new byte[2];
+            Utf8Bytes[0] = (byte)(infoPuller_2 | (codePoint >> 6));
+            Utf8Bytes[1] = (byte)(infoPuller_3 | (codePoint & infoPuller_1));
+        } else if (codePoint > 0x00a2 && codePoint <= 0x20ac) {
+            Utf8Bytes = new byte[3];
+            Utf8Bytes[0] = (byte)(infoPuller_4 | (codePoint >> 12));
+            Utf8Bytes[1] = (byte)(infoPuller_3 | ((codePoint >> 6) &
+                    infoPuller_1));
+            Utf8Bytes[2] = (byte)(infoPuller_3 | (codePoint & infoPuller_1));
+        } else {
+            Utf8Bytes = new byte[4];
+            Utf8Bytes[0] = (byte)(infoPuller_5 | (codePoint >> 18));
+            Utf8Bytes[1] = (byte)(infoPuller_3 | ((codePoint >> 12) &
+                    infoPuller_1));
+            Utf8Bytes[2] = (byte)(infoPuller_3 | (codePoint >> 6) &
+                    infoPuller_1);
+            Utf8Bytes[3] = (byte)(infoPuller_3 | (codePoint & infoPuller_1));
+        }
+
+        return Utf8Bytes;
     }
     
     /**
@@ -89,14 +128,8 @@ public class EncodingHelperChar {
      * @return the U+ string for this character
      */
     public String toCodePointString() {
-        String result = Integer.toHexString(codePoint);
-        String zero = "0";
-        while (result.length() < 4) {
-            result = zero.concat(result);
-        }
-        String unicode = "U+";
-        String hexString = unicode.concat(result);
-        return hexString.toUpperCase();
+        String hexString = String.format("U+%04X", codePoint);
+        return hexString;
     }
     
     /**
@@ -110,8 +143,18 @@ public class EncodingHelperChar {
      * @return the escaped hexadecimal byte string
      */
     public String toUtf8String() {
-        // Not yet implemented.
-        return "";
+        String utf8String = "";
+        byte[] utf8Bytes = this.toUtf8Bytes();
+        for (byte byteItem : utf8Bytes) {
+            if (utf8String == "") {
+                utf8String = String.format("\\x%02X", byteItem);
+            } else {
+                utf8String = utf8String.concat(String.format("\\x%02X",
+                        byteItem));
+            }
+        }
+
+        return utf8String;
     }
     
     /**
@@ -123,23 +166,38 @@ public class EncodingHelperChar {
      * @return this character's Unicode name
      */
     public String getCharacterName() {
-        String name = "Name Not Found";
+        String name = "<unknown> ";
+
         try {
             File unicodeData = new File("src/edu/carleton/bantat/" +
                     "UnicodeData.txt");
             Scanner unicodeScan = new Scanner(unicodeData);
             String pointer = this.toCodePointString().substring(2);
             boolean found = false;
-            while (!found && unicodeScan.hasNext()) {
-                String line = unicodeScan.nextLine();
-                String[] split = line.split(";");
-                if (split[0].equals(pointer)) {
-                    found = true;
-                    name = split[1];
+            if (codePoint <= 0x001F) {
+                while (!found && unicodeScan.hasNext()) {
+                    String line = unicodeScan.nextLine();
+                    String[] split = line.split(";");
+                    if (split[0].equals(pointer)) {
+                        found = true;
+                        name = split[1] + " ";
+                        name = name.concat(split[10]);
+                    }
+                }
+            } else {
+                while (!found && unicodeScan.hasNext()) {
+                    String line = unicodeScan.nextLine();
+                    String[] split = line.split(";");
+                    if (split[0].equals(pointer)) {
+                        found = true;
+                        name = split[1];
+                    }
+                }
+                if (!found) {
+                    name = name.concat(toCodePointString());
                 }
             }
-        }
-        catch (FileNotFoundException e) {
+        } catch (FileNotFoundException e) {
             System.out.println("UnicodeData file not found.");
             System.exit(1);
         }

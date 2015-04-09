@@ -1,8 +1,9 @@
 package edu.carleton.bantat;
 
+import com.sun.media.jfxmedia.track.Track;
+
 import java.nio.ByteBuffer;
 import java.util.Arrays;
-import java.util.regex.Pattern;
 
 public class Main {
     public static void main(String[] args) {
@@ -20,8 +21,6 @@ public class Main {
         System.out.println();
         System.out.println("Still not entertained? Alright, I give up");
 
-        byte[] arr = new byte[]{(byte)0xF8, (byte)0x3F};
-        System.out.println(String.format("%x", 10));
         //int test1 = 0b00111111;
         //int codePointTest = 0x2f1d;
 
@@ -33,12 +32,13 @@ public class Main {
         //System.out.println(byteArray[1]);
 
         //System.out.println(String.codePointAt);
-        byte[] input = new byte[] {(byte)
-                0x88, (byte)0x8d,(byte)0x90, (byte)0xf0};
-        EncodingHelperChar test2 = new EncodingHelperChar(input);
-        System.out.println(test2.getCodePoint() + ", actual: " + 0x10348);
 
-        byte [] bytes = ByteBuffer.allocate(4).putInt(17291729).array();
-        System.out.println(Arrays.toString(bytes));
+        //EncodingHelperChar testChar = new EncodingHelperChar(0x0024);
+        //System.out.println(Arrays.toString(testChar.toUtf8Bytes()));
+
+        EncodingHelperChar test1 = new EncodingHelperChar(0xdddddd);
+        System.out.println(test1.toUtf8String());
+
+
     }
 }

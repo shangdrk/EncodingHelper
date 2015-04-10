@@ -1,14 +1,7 @@
 package edu.carleton.bantat;
 
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
+
 import org.junit.Test;
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.*;
-
-import java.io.Closeable;
-import java.io.IOException;
-
 import static org.junit.Assert.*;
 
 /**
@@ -18,12 +11,12 @@ import static org.junit.Assert.*;
 public class EncodingHelperCharTest {
 
     private static final int MAXIMUM = 0x10FFFF;
-    private static int testCodePoint = 0x0480;
-    private byte[] testByteCodePoint = {(byte) 130, (byte) 27};
-    private char testChar = 'a';
+    private static int testCodePoint = 0x805CC;
+    private byte[] testByteCodePoint = {(byte) 0xB3, (byte) 0x27, (byte) 0x9D};
+    private char testChar = '王';
 
     @Test
-    public void EncodingHelperCharShouldTakeValidCodePoint() throws Exception {
+    public void encodingHelperCharShouldTakeValidCodePoint() throws Exception {
         EncodingHelperChar testChar1 = new EncodingHelperChar(testCodePoint);
         assertTrue("Codepoint greater than valid hex range", testChar1.getCodePoint() <= MAXIMUM);
         assertTrue("Codepoint negative", testChar1.getCodePoint() >= 0);
@@ -31,14 +24,16 @@ public class EncodingHelperCharTest {
     }
 
     @Test
-    public void EncodingHelperCharShouldConvertFromByteToValidCodePoint() throws Exception {
+    public void encodingHelperCharShouldConvertFromByteToValidCodePoint()
+            throws Exception {
         EncodingHelperChar testChar2 = new EncodingHelperChar(testByteCodePoint);
         assertTrue("Codepoint greater than valid hex range", testChar2.getCodePoint() <= MAXIMUM);
         assertTrue("Codepoint negative", testChar2.getCodePoint() >= 0);
     }
 
     @Test
-    public void EncodingHelperCharShouldConvertFromCharToValidCodePoint() throws Exception {
+    public void encodingHelperCharShouldConvertFromCharToValidCodePoint()
+            throws Exception {
         EncodingHelperChar testChar3 = new EncodingHelperChar(testChar);
         assertTrue("Codepoint greater than valid hex range", testChar3.getCodePoint() <= MAXIMUM);
         assertTrue("Codepoint negative", testChar3.getCodePoint() >= 0);

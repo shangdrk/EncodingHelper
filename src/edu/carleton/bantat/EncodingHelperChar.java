@@ -89,6 +89,14 @@ public class EncodingHelperChar {
         }
         this.codePoint = codePoint;
     }
+
+    /**
+     * Convert the integer code point to its character representation.
+     * @return the character representation of the code point
+     */
+    public char toCharacter() {
+        return Character.toChars(codePoint)[0];
+    }
     
     /**
      * Converts this character into an array of the bytes in its UTF-8
@@ -242,6 +250,60 @@ public class EncodingHelperChar {
                     name = name.concat(toCodePointString());
                 }
             }
+        }
+        catch (FileNotFoundException e) {
+            System.out.println("UnicodeData file not found.");
+            System.exit(1);
+        }
+        // Returns string name if found, and '<unknown> + UnicodeString' if not
+        return name;
+    }
+
+    /**
+     * Generates the official Unicode grouping for this character.
+     *   For example, if this character is a lower-case letter e with an acute
+     * accent, then this method returns the string "Latin-1 Supplement"
+     * (without quotation marks).
+     *
+     * @return this character's Unicode name
+     */
+    public String getGroupName() {
+        // vars 'name' starts as unknown, in case codepoint not assigned char
+        String name = "Group not found for ";
+
+        try {
+            // Load 'UnicodeData.txt' from relative path, construct File and
+            // Scanner objects
+            File unicodeData = new File("src/edu/carleton/bantat/" +
+                    "lang.txt");
+            Scanner unicodeScan = new Scanner(unicodeData);
+            // Create pointer vars from codepoint string representation for use
+            // in searching for group, boolean to record if search was
+            // successful
+            String pointer = this.toCodePointString().substring(2);
+            boolean found = false;
+            // Scans txt file while group has not been found yet
+            while (!found && unicodeScan.hasNext()) {
+                // Splits each line by semi-colon, if index [0] less than
+                // vars pointer and index [1] greater than pointer,
+                // reassigns name to appropriate string, and
+                // sets found to true
+                String line = unicodeScan.nextLine();
+                String[] split = line.split(";");
+                String rangeStartStr = split[0];
+                String rangeEndStr = split[1];
+                int rangeStart = Integer.valueOf(rangeStartStr, 16)
+                        .intValue();
+                int rangeEnd = Integer.valueOf(rangeEndStr, 16).intValue();
+                if ((codePoint >= rangeStart) && (codePoint <= rangeEnd)) {
+                    found = true;
+                    name = split[2];
+                }
+            }
+            if (!found) {
+                name = name.concat(toCodePointString());
+            }
+
         }
         catch (FileNotFoundException e) {
             System.out.println("UnicodeData file not found.");

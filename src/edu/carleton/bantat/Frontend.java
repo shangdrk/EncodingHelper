@@ -1,4 +1,4 @@
-//package edu.carleton.bantat;
+package edu.carleton.bantat;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -6,20 +6,33 @@ import java.util.LinkedList;
 import java.util.List;
 
 /**
- * Created by torebanta on 4/12/15.
+ * @author Tore Banta
+ * @author Derek Shang
  */
-public class Frontend {
+/**
+ * A class collection of methods that are used in the execution of the
+ * command line application Main. This class must not be
+ * instantiated and should serve only as a method space for Main.java
+ */
+public final class Frontend {
     private Frontend() { /* Creates an empty constructor to avoid
      instantiating this class */ }
 
+    /**
+     * Prints out the usage message for the user at proper time.
+     */
     public static void printUsage() {
         System.out.println("Usage:");
-        System.out.println("java EncodingHelper [-i type] [-o type] <data>");
+        System.out.println("java Main [-i type] [-o type] <data>");
         System.out.println("You may also use --input and --output");
         System.out.println("Possible types: string, codepoint, utf8, summary");
         System.exit(1);
     }
 
+    /**
+     * The default method that handles input and output.
+     * @param input an entry in args[] that represents the input string
+     */
     public static void stringToSummary(String input) {
         if (input.length() == 1) {
             charStandardOutput(input.charAt(0));
@@ -28,6 +41,11 @@ public class Frontend {
         }
     }
 
+    /**
+     * This private method handles a string to summary conversion when the
+     * input is a single character.
+     * @param aChar a single character
+     */
     private static void charStandardOutput(char aChar) {
         EncodingHelperChar ehChar = new EncodingHelperChar(aChar);
         System.out.println("Character: " + ehChar.toCharacter());
@@ -36,6 +54,11 @@ public class Frontend {
         System.out.println("UTF-8: " + ehChar.toUtf8String());
     }
 
+    /**
+     * This private method handles a string to summary conversion when the
+     * input is a string.
+     * @param aString an input string
+     */
     private static void stringStandardOutput(String aString) {
         EncodingHelperChar[] input = new EncodingHelperChar[aString.length()];
         for (int i = 0; i < aString.length(); i++) {
@@ -51,10 +74,13 @@ public class Frontend {
         System.out.println("UTF-8: " + outUTF8);
     }
 
+    /**
+     * Handles the string to UTF-8 string conversion.
+     * @param input an entry in args[] that represents the input
+     */
     public static void stringToUtf8(String input) {
         // Creates ArrayList to contain input chars
-        ArrayList<EncodingHelperChar> chars
-                = new ArrayList<EncodingHelperChar>();
+        ArrayList<EncodingHelperChar> chars = new ArrayList<>();
         // For loop parses string and adds new EncodingHelperChar objects to
         // the ArrayList
         for (int i = 0; i < input.length(); i++) {
@@ -69,10 +95,13 @@ public class Frontend {
         System.out.println();
     }
 
+    /**
+     * Handles the string to code point string conversion.
+     * @param input an entry in args[] that represents the input
+     */
     public static void stringToCodepoint(String input) {
         // Creates ArrayList to contain input chars
-        ArrayList<EncodingHelperChar> chars
-                = new ArrayList<EncodingHelperChar>();
+        ArrayList<EncodingHelperChar> chars = new ArrayList<>();
         // For loop parses string and adds new EncodingHelperChar objects to
         // the ArrayList
         for (int i = 0; i < input.length(); i++) {
@@ -87,10 +116,14 @@ public class Frontend {
         System.out.println(chars.get(chars.size() - 1).toCodePointString());
     }
 
+    /**
+     * Handles the string to language range conversion. It displays the range
+     * of each character given in the input.
+     * @param input an entry in args[] that represents the input
+     */
     public static void stringToLang(String input) {
         // Creates ArrayList to contain input chars
-        ArrayList<EncodingHelperChar> chars
-                = new ArrayList<EncodingHelperChar>();
+        ArrayList<EncodingHelperChar> chars = new ArrayList<>();
         // For loop parses string and adds new EncodingHelperChar objects to
         // the ArrayList
         for (int i = 0; i < input.length(); i++) {
@@ -106,6 +139,10 @@ public class Frontend {
         System.out.println();
     }
 
+    /**
+     * Handles the UTF-8 string to summary conversion.
+     * @param input an entry in args[] that represents the input
+     */
     public static void utf8ToSummary(String input) {
         List<String> rawStringData = new LinkedList<>(Arrays.asList(input
                 .split("\\\\x")));
@@ -141,6 +178,11 @@ public class Frontend {
 
     }
 
+    /**
+     * Determines the number of bytes used to encode a character that starts
+     * with the given byte
+     * @param aUtf any byte
+     */
     private static int determineUtfBytes(byte aUtf) {
         String aUtfInString = Integer.toBinaryString(Byte.toUnsignedInt(aUtf));
         int count = 0;
@@ -153,6 +195,10 @@ public class Frontend {
         return count;
     }
 
+    /**
+     * Handles the UTF-8 to character string conversion.
+     * @param input an entry in args[] that represents the input
+     */
     public static void utf8ToString(String input) {
         List<String> rawStringData = new LinkedList<>(Arrays.asList(input
                 .split("\\\\x")));
@@ -184,6 +230,10 @@ public class Frontend {
         System.out.println(outString);
     }
 
+    /**
+     * Handles the UTF-8 string to code point string conversion.
+     * @param input an entry in args[] that represents the input
+     */
     public static void utf8ToCodepoint(String input) {
         List<String> rawStringData = new LinkedList<>(Arrays.asList(input
                 .split("\\\\x")));
@@ -216,6 +266,10 @@ public class Frontend {
         System.out.println(outCodePoints);
     }
 
+    /**
+     * Handles the UTF-8 string to language string conversion.
+     * @param input an entry in args[] that represents the input
+     */
     public static void utf8ToLang(String input) {
         List<String> rawStringData =new LinkedList<>(Arrays.asList(input
                 .split("\\\\x")));
@@ -252,18 +306,21 @@ public class Frontend {
         }
     }
 
+    /**
+     * Handles the code point string to summary conversion.
+     * @param input an entry in args[] that represents the input
+     */
     public static void codepointToSummary(String input) {
         // Separate behaviour for multiple codepoints
         if (input.contains(" ")) {
             // Creates ArrayList of char objects
-            ArrayList<EncodingHelperChar> chars
-                    = new ArrayList<EncodingHelperChar>();
+            ArrayList<EncodingHelperChar> chars = new ArrayList<>();
             // Splits input string by space character
             String[] split = input.split(" ");
             for (int i = 0; i < split.length; i++) {
                 // Parse int codepoint from string input
                 int codePt
-                        = Integer.valueOf(split[i].substring(2), 16).intValue();
+                        = Integer.valueOf(split[i].substring(2), 16);
                 // and create EncodingHelperChar object, and add to ArrayList
                 EncodingHelperChar newChar = new EncodingHelperChar(codePt);
                 chars.add(newChar);
@@ -287,12 +344,11 @@ public class Frontend {
         }
         // Single codepoint behaviour
         else {
-            ArrayList<EncodingHelperChar> chars
-                    = new ArrayList<EncodingHelperChar>();
+            ArrayList<EncodingHelperChar> chars = new ArrayList<>();
             String[] split = input.split(" ");
             for (int i = 0; i < split.length; i++) {
                 int codePt
-                        = Integer.valueOf(split[i].substring(2), 16).intValue();
+                        = Integer.valueOf(split[i].substring(2), 16);
                 EncodingHelperChar newChar = new EncodingHelperChar(codePt);
                 chars.add(newChar);
             }
@@ -314,16 +370,19 @@ public class Frontend {
         }
     }
 
+    /**
+     * Handles the code point string to character string conversion.
+     * @param input an entry in args[] that represents the input
+     */
     public static void codepointToString(String input) {
         // Creates ArrayList of char objects
-        ArrayList<EncodingHelperChar> chars
-                = new ArrayList<EncodingHelperChar>();
+        ArrayList<EncodingHelperChar> chars = new ArrayList<>();
         // Splits input string by space character
         String[] split = input.split(" ");
 
         for (int i = 0; i < split.length; i++) {
             // Parse int codepoint from string input
-            int codePt = Integer.valueOf(split[i].substring(2),16).intValue();
+            int codePt = Integer.valueOf(split[i].substring(2),16);
             // and create EncodingHelperChar object, and add to ArrayList
             EncodingHelperChar newChar = new EncodingHelperChar(codePt);
             chars.add(newChar);
@@ -335,15 +394,18 @@ public class Frontend {
         System.out.println();
     }
 
+    /**
+     * Handles the code point string to UTF-8 string conversion.
+     * @param input an entry in args[] that represents the input
+     */
     public static void codepointToUtf8(String input) {
         // Creates ArrayList of char objects
-        ArrayList<EncodingHelperChar> chars
-                = new ArrayList<EncodingHelperChar>();
+        ArrayList<EncodingHelperChar> chars = new ArrayList<>();
         // Splits input string by space character
         String[] split = input.split(" ");
         for (int i = 0; i < split.length; i++) {
             // Parse int codepoint from string input
-            int codePt = Integer.valueOf(split[i].substring(2),16).intValue();
+            int codePt = Integer.valueOf(split[i].substring(2),16);
             // and create EncodingHelperChar object, and add to ArrayList
             EncodingHelperChar newChar = new EncodingHelperChar(codePt);
             chars.add(newChar);
@@ -355,15 +417,18 @@ public class Frontend {
         System.out.println();
     }
 
+    /**
+     * Handles the code point string to language string conversion.
+     * @param input an entry in args[] that represents the input
+     */
     public static void codepointToLang(String input) {
         // Creates ArrayList of char objects
-        ArrayList<EncodingHelperChar> chars
-                = new ArrayList<EncodingHelperChar>();
+        ArrayList<EncodingHelperChar> chars = new ArrayList<>();
         // Splits input string by space character
         String[] split = input.split(" ");
         for (int i = 0; i < split.length; i++) {
             // Parse int codepoint from string input
-            int codePt = Integer.valueOf(split[i].substring(2),16).intValue();
+            int codePt = Integer.valueOf(split[i].substring(2),16);
             // and create EncodingHelperChar object, and add to ArrayList
             EncodingHelperChar newChar = new EncodingHelperChar(codePt);
             chars.add(newChar);
@@ -377,12 +442,12 @@ public class Frontend {
         System.out.println();
     }
 
-
-
-
-
-
-
+    /**
+     * Analyzes the arguments array from command line. If any input or output
+     * is specified, uses a string in an array to indicate the user options.
+     * @param args the arguments array passed from the command line
+     * @return an array of two string entries that indicate the input and output
+     */
     public static String[] argsAnalysis(String[] args) {
         String[] result = new String[]{null, null};
         for (int i=0; i < args.length; i++) {

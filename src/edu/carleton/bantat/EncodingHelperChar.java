@@ -1,4 +1,4 @@
-//package edu.carleton.bantat;
+package edu.carleton.bantat;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -8,9 +8,8 @@ import java.util.Scanner;
  * @author Tore Banta
  * @author Derek Shang
  */
-
 /**
- * The main model class for the EncodingHelper project in
+ * The main model class for the Main project in
  * CS 257, Spring 2015, Carleton College. Each object of this class
  * represents a single Unicode character. The class's methods
  * generate various representations of the character. 
@@ -158,8 +157,7 @@ public class EncodingHelperChar {
     public String toCodePointString() {
         // Uses format() method of String to produce U+ representation of int
         // codepoint with length >= 4, padded with zeroes
-        String hexString = String.format("U+%04X", codePoint);
-        return hexString;
+        return String.format("U+%04X", codePoint);
     }
     
     /**
@@ -180,7 +178,7 @@ public class EncodingHelperChar {
         byte[] utf8Bytes = this.toUtf8Bytes();
         for (byte byteItem : utf8Bytes) {
             // handles the first byte in case
-            if (utf8String == "") {
+            if (utf8String.equals("")) {
                 utf8String = String.format("\\x%02X", byteItem);
             } else {
                 utf8String = utf8String.concat(String.format("\\x%02X",
@@ -193,7 +191,7 @@ public class EncodingHelperChar {
     
     /**
      * Generates the official Unicode name for this character.
-     *   For example, if this character is a lower-case letter e with an acute
+     * For example, if this character is a lower-case letter e with an acute
      * accent, then this method returns the string "LATIN SMALL LETTER E WITH
      * ACUTE" (without quotation marks).
      *
@@ -206,7 +204,9 @@ public class EncodingHelperChar {
         try {
             // Load 'UnicodeData.txt' from relative path, construct File and
             // Scanner objects
-            File unicodeData = new File("UnicodeData.txt");
+            File unicodeData = new File
+                    ("edu/carleton/bantat/UnicodeData" +
+                    ".txt");
             Scanner unicodeScan = new Scanner(unicodeData);
             // Create pointer vars from codepoint string representation for use
             // in searching for name, boolean to record if search was successful
@@ -260,7 +260,7 @@ public class EncodingHelperChar {
 
     /**
      * Generates the official Unicode grouping for this character.
-     *   For example, if this character is a lower-case letter e with an acute
+     * For example, if this character is a lower-case letter e with an acute
      * accent, then this method returns the string "Latin-1 Supplement"
      * (without quotation marks).
      *
@@ -273,7 +273,8 @@ public class EncodingHelperChar {
         try {
             // Load 'UnicodeData.txt' from relative path, construct File and
             // Scanner objects
-            File unicodeData = new File("lang.txt");
+            File unicodeData = new File
+                    ("edu/carleton/bantat/lang.txt");
             Scanner unicodeScan = new Scanner(unicodeData);
             // Create pointer vars from codepoint string representation for use
             // in searching for group, boolean to record if search was
@@ -290,9 +291,8 @@ public class EncodingHelperChar {
                 String[] split = line.split(";");
                 String rangeStartStr = split[0];
                 String rangeEndStr = split[1];
-                int rangeStart = Integer.valueOf(rangeStartStr, 16)
-                        .intValue();
-                int rangeEnd = Integer.valueOf(rangeEndStr, 16).intValue();
+                int rangeStart = Integer.valueOf(rangeStartStr, 16);
+                int rangeEnd = Integer.valueOf(rangeEndStr, 16);
                 if ((codePoint >= rangeStart) && (codePoint <= rangeEnd)) {
                     found = true;
                     name = split[2];

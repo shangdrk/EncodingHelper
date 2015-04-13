@@ -1,4 +1,4 @@
-package edu.carleton.bantat;
+//package edu.carleton.bantat;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -121,13 +121,13 @@ public class EncodingHelperChar {
         // the unicode - utf8 conversion algorithm
         // the codePoint ranges that determine the length of Utf8Bytes come
         // from Wikipedia page "UTF-8": http://en.wikipedia.org/wiki/UTF-8
-        if (codePoint <= 0x0024) {
+        if (codePoint <= 0x007F) {
             Utf8Bytes = new byte[]{(byte)codePoint};
-        } else if (codePoint > 0x0024 && codePoint <= 0x00a2) {
+        } else if (codePoint > 0x0080 && codePoint <= 0x07FF) {
             Utf8Bytes = new byte[2];
             Utf8Bytes[0] = (byte)(infoPuller_2 | (codePoint >> 6));
             Utf8Bytes[1] = (byte)(infoPuller_3 | (codePoint & infoPuller_1));
-        } else if (codePoint > 0x00a2 && codePoint <= 0x20ac) {
+        } else if (codePoint > 0x0800 && codePoint <= 0xFFFF) {
             Utf8Bytes = new byte[3];
             Utf8Bytes[0] = (byte)(infoPuller_4 | (codePoint >> 12));
             Utf8Bytes[1] = (byte)(infoPuller_3 | ((codePoint >> 6) &
@@ -206,8 +206,7 @@ public class EncodingHelperChar {
         try {
             // Load 'UnicodeData.txt' from relative path, construct File and
             // Scanner objects
-            File unicodeData = new File("src/edu/carleton/bantat/" +
-                    "UnicodeData.txt");
+            File unicodeData = new File("UnicodeData.txt");
             Scanner unicodeScan = new Scanner(unicodeData);
             // Create pointer vars from codepoint string representation for use
             // in searching for name, boolean to record if search was successful
@@ -274,8 +273,7 @@ public class EncodingHelperChar {
         try {
             // Load 'UnicodeData.txt' from relative path, construct File and
             // Scanner objects
-            File unicodeData = new File("src/edu/carleton/bantat/" +
-                    "lang.txt");
+            File unicodeData = new File("lang.txt");
             Scanner unicodeScan = new Scanner(unicodeData);
             // Create pointer vars from codepoint string representation for use
             // in searching for group, boolean to record if search was
@@ -306,7 +304,7 @@ public class EncodingHelperChar {
 
         }
         catch (FileNotFoundException e) {
-            System.out.println("UnicodeData file not found.");
+            System.out.println("lang.txt file not found.");
             System.exit(1);
         }
         // Returns string name if found, and '<unknown> + UnicodeString' if not

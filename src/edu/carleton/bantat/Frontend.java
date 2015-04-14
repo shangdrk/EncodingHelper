@@ -55,6 +55,7 @@ public final class Frontend {
         System.out.println("Code point: " + ehChar.toCodePointString());
         System.out.println("Name: " + ehChar.getCharacterName());
         System.out.println("UTF-8: " + ehChar.toUtf8String());
+        System.out.println("Group: " + ehChar.getGroupName());
     }
 
     /**

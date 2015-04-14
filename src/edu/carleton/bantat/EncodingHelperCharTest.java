@@ -8,6 +8,10 @@ import static org.junit.Assert.*;
  * @author Tore Banta
  * @author Derek Shang
  */
+// ** IMPORTANT ** When running jUnit tests, alter filepath vars to
+// "./out/production/EncodingHelper/edu/carleton/bantat/lang.txt" or
+// "./out/production/EncodingHelper/edu/carleton/bantat/UnicodeData.txt"
+// By default, app configured for running from command line
 public class EncodingHelperCharTest {
 
     private static final int MAXIMUM = 0x10FFFF;
@@ -98,5 +102,19 @@ public class EncodingHelperCharTest {
     public void testGetCharacterNameReturnsNonNull() throws Exception {
         EncodingHelperChar testChar11 = new EncodingHelperChar(testChar);
         assertFalse("Character name is null", testChar11.getCharacterName() == null);
+    }
+
+    @Test
+    public void testToCharacterReturnsCorrectChar() throws Exception {
+        EncodingHelperChar testChar12 = new EncodingHelperChar(testChar);
+        assertTrue("Character output does not match constructor argument",
+                testChar == testChar12.toCharacter());
+    }
+
+    @Test
+    public void toGroupNameReturnsCorrectGroup() throws Exception {
+        EncodingHelperChar testChar13 = new EncodingHelperChar('Ӓ');
+        assertTrue("Group name not accurate", testChar13.getGroupName()
+                .equals("Cyrillic"));
     }
 }

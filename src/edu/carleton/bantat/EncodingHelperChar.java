@@ -202,11 +202,14 @@ public class EncodingHelperChar {
         String name = "<unknown> ";
 
         try {
+
             // Load 'UnicodeData.txt' from relative path, construct File and
             // Scanner objects
+            // ** IMPORTANT ** When running jUnit tests, alter filepath vars to
+            // "./out/production/EncodingHelper/edu/carleton/bantat/lang.txt"
+            // By default, app configured for running from command line
             File unicodeData = new File
-                    ("edu/carleton/bantat/UnicodeData" +
-                    ".txt");
+                    ("edu/carleton/bantat/UnicodeData.txt");
             Scanner unicodeScan = new Scanner(unicodeData);
             // Create pointer vars from codepoint string representation for use
             // in searching for name, boolean to record if search was successful
@@ -273,6 +276,9 @@ public class EncodingHelperChar {
         try {
             // Load 'UnicodeData.txt' from relative path, construct File and
             // Scanner objects
+            // ** IMPORTANT ** When running jUnit tests, alter filepath vars to
+            // "./out/production/EncodingHelper/edu/carleton/bantat/lang.txt"
+            // By default, app configured for running from command line
             File unicodeData = new File
                     ("edu/carleton/bantat/lang.txt");
             Scanner unicodeScan = new Scanner(unicodeData);

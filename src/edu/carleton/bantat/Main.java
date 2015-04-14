@@ -10,16 +10,17 @@ package edu.carleton.bantat;
  */
 public class Main {
     public static void main(String[] args) {
+        // if no argument is passed, prints usage information
         if (args.length == 0) {
             Frontend.printUsage();
+        // if only one argument is passed, uses default string to summary
+        // approach
         } else if (args.length == 1) {
             Frontend.stringToSummary(args[0]);
         }
 
-        if (Frontend.argsAnalysis(args).length == 0) {
-            System.out.println("Wrong format. See usage information below:");
-            Frontend.printUsage();
-        }
+        // handles the case where a bunch of code points are passed in as
+        // multiple arguments
         int index = -1;
         String codePoints;
         for (int i = 0; i < args.length; i++) {
@@ -37,8 +38,11 @@ public class Main {
             args[index] = codePoints;
         }
 
+        // assigns the value of input and output types to two variables
         String inputType = Frontend.argsAnalysis(args)[0];
         String outputType = Frontend.argsAnalysis(args)[1];
+        // depending on the input and output values, chooses corresponding
+        // method to call
         if (inputType == null && outputType != null) {
             switch (outputType) {
                 case "string":
@@ -62,6 +66,7 @@ public class Main {
                     Frontend.printUsage();
                     break;
             }
+        // deals with the case where output type is not specified
         } else if (outputType == null && inputType != null) {
             switch (inputType) {
                 case "string":
@@ -84,6 +89,7 @@ public class Main {
                     Frontend.printUsage();
                     break;
             }
+        // deals with the case where both input and output types are specified
         } else if (outputType != null && inputType != null) {
             switch (inputType + " " + outputType) {
                 case "string string":

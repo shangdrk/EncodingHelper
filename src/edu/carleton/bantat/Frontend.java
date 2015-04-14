@@ -34,8 +34,11 @@ public final class Frontend {
      * @param input an entry in args[] that represents the input string
      */
     public static void stringToSummary(String input) {
+        // if the input is a single character, prints out additional "Name"
+        // information
         if (input.length() == 1) {
             charStandardOutput(input.charAt(0));
+        // prints summary for string input
         } else {
             stringStandardOutput(input);
         }
@@ -60,10 +63,12 @@ public final class Frontend {
      * @param aString an input string
      */
     private static void stringStandardOutput(String aString) {
+        // creates an array of EncodingHelperChar objects for output
         EncodingHelperChar[] input = new EncodingHelperChar[aString.length()];
         for (int i = 0; i < aString.length(); i++) {
             input[i] = new EncodingHelperChar(aString.charAt(i));
         }
+        // declares two variables to record the output information
         String outCodePoints = "", outUTF8 = "";
         for (EncodingHelperChar item : input) {
             outCodePoints = outCodePoints.concat(item.toCodePointString()+" ");
@@ -144,9 +149,12 @@ public final class Frontend {
      * @param input an entry in args[] that represents the input
      */
     public static void utf8ToSummary(String input) {
+        // splits the input into raw string data to be processed
         List<String> rawStringData = new LinkedList<>(Arrays.asList(input
                 .split("\\\\x")));
+        // removes the leading empty string
         rawStringData.remove(0);
+        // converts the raw string data to byte type
         List<Byte> rawByteData = new ArrayList<>();
         for (String rawString : rawStringData) {
             rawByteData.add((byte)(Integer.valueOf(rawString, 16).intValue()));
@@ -156,7 +164,9 @@ public final class Frontend {
         List<EncodingHelperChar> data = new ArrayList<>();
 
         while (!rawByteData.isEmpty()) {
+            // determines how many bytes to parse into a single code point
             int num = determineUtfBytes(rawByteData.get(0));
+            // creates an array of EncodingHelperChar objects
             if (rawByteData.size() >= num) {
                 byte[] dataByte = new byte[num];
                 List<Byte> temp = rawByteData.subList(0, num);
@@ -168,6 +178,7 @@ public final class Frontend {
             }
         }
 
+        // compiles the output information
         for (EncodingHelperChar item : data) {
             outCodePoints = outCodePoints.concat(item.toCodePointString()+" ");
             outString += item.toCharacter();
@@ -184,6 +195,7 @@ public final class Frontend {
      * @param aUtf any byte
      */
     private static int determineUtfBytes(byte aUtf) {
+        // convert the byte to binary string and count the leading ones
         String aUtfInString = Integer.toBinaryString(Byte.toUnsignedInt(aUtf));
         int count = 0;
         for (int i=0;i<aUtfInString.length();i++) {
@@ -191,6 +203,8 @@ public final class Frontend {
             else break;
         }
 
+        // makes sure count is at least one since at least one byte needs to
+        // be parsed
         count = (count > 1) ? count : 1;
         return count;
     }
@@ -449,16 +463,21 @@ public final class Frontend {
      * @return an array of two string entries that indicate the input and output
      */
     public static String[] argsAnalysis(String[] args) {
+        // predefines the result
         String[] result = new String[]{null, null};
         for (int i=0; i < args.length; i++) {
+            // explicitly searches for "-i" or "--input"
             if (args[i].equals("-i") || args[i].equals("--input")) {
+                // only records the entry right after the user option argument
                 if (i+1<args.length) { result[0] = args[i+1]; }
                 else {
                     System.out.println("Wrong format. See usage information " +
                             "below:");
                     printUsage();
                 }
+            // explicitly searches for "-o" or "--output"
             } else if (args[i].equals("-o") || args[i].equals("--output")) {
+                // only records the entry right after the user option argument
                 if (i+1<args.length) { result[1] = args[i+1]; }
                 else {
                     System.out.println("Wrong format. See usage information " +
@@ -467,6 +486,7 @@ public final class Frontend {
                 }
             }
         }
+        // if no input or output option is found, prints usage information
         if (result[0] == null && result[1] == null) {
             System.out.println("Wrong format. See usage information "
                     + "below:");

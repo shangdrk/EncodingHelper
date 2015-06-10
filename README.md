@@ -49,7 +49,9 @@ U+00EA
 \xC3\xAA\x74\x72\x65
 > java EncodingHelper -i codepoint -o utf8 "U+00EA U+0074 U+0072 U+0065"
 \xC3\xAA\x74\x72\x65
-The 'lang' output argument returns the unicode group which a character belongs to.
+~~~
+* The 'lang' output argument returns the unicode group which a character belongs to.
+~~~
 > java EncodingHelper Щ
 Character: Щ Code point: U+0429 Name: CYRILLIC CAPITAL LETTER SHCHA UTF-8: \xD0\xA9 Group: Cyrillic
 > java EncodingHelper -o lang Щ

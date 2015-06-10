@@ -1,6 +1,8 @@
 # EncodingHelper
 A command line tool for Unicode encoding and decoding.
 
+The original repo is [HERE](https://bitbucket.org/bantat/encodinghelper) on bitbucket.
+
 Authors: Tore Banta, Derek Shang
 
 ## Usage

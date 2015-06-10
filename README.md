@@ -55,7 +55,11 @@ U+00EA
 * The 'lang' output argument returns the unicode group which a character belongs to.
 ~~~
 > java EncodingHelper Щ
-Character: Щ Code point: U+0429 Name: CYRILLIC CAPITAL LETTER SHCHA UTF-8: \xD0\xA9 Group: Cyrillic
+Character: Щ
+Code point: U+0429
+Name: CYRILLIC CAPITAL LETTER SHCHA
+UTF-8: \xD0\xA9
+Group: Cyrillic
 > java EncodingHelper -o lang Щ
 Char 1: Щ, Group: Cyrillic
 ~~~
